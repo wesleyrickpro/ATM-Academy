@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Academy - Framework Strategy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --bg-alt: #0a0a0a;
+            --surface-color: #111111;
+            --accent-color: #ff4d00; 
+            --secondary-color: #0066ff; 
+            --text-primary: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --border-color: #1a1a1a;
+            --font-main: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --header-h: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+            letter-spacing: 0.03em;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-color);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        .loader-text {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .loader-bar { width: 200px; height: 1px; background: var(--border-color); position: relative; }
+        .loader-fill { position: absolute; height: 100%; background: var(--accent-color); width: 0; animation: load 1.5s forwards ease-in-out; }
+        @keyframes load { to { width: 100%; } }
+
+        /* --- DYNAMIC BACKGROUND --- */
+        #glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 77, 0, 0.03) 0%, rgba(0, 102, 255, 0.02) 40%, rgba(5, 5, 5, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-menu {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            transition: var(--transition);
+            opacity: 0.3;
+            border-right: 2px solid transparent;
+            padding-right: 10px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-color);
+            opacity: 1;
+            border-right: 2px solid var(--accent-color);
+        }
+
+        /* --- HEADER --- */
+        .header-top {
+            height: var(--header-h);
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: #050505;
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .brand-name { 
+            font-weight: 900; 
+            letter-spacing: -1px; 
+            font-size: clamp(0.9rem, 4vw, 1.2rem); 
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .author { 
+            font-size: clamp(0.5rem, 2.5vw, 0.6rem); 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* --- CONTENT STRUCTURE --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid var(--border-color);
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        section.visible { opacity: 1; transform: translateY(0); }
+        section:nth-child(even) { background-color: var(--bg-alt); }
+
+        .fw-label {
+            color: var(--accent-color);
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4.3rem); 
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 40px;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            word-break: break-word;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 40px 0 20px 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2::before { content: ""; width: 30px; height: 1px; background: var(--secondary-color); }
+
+        p { color: var(--text-secondary); font-size: 1.15rem; margin-bottom: 20px; max-width: 850px; }
+
+        /* --- COMPONENTS --- */
+        .image-wrapper {
+            width: 100%;
+            aspect-ratio: 2816 / 1536;
+            background: #080808;
+            border: 1px solid var(--border-color);
+            margin: 40px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .parallax-img {
+            width: 100%;
+            height: 110%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: grayscale(15%);
+        }
+
+        .image-wrapper:hover .parallax-img { transform: scale(1.05); filter: grayscale(0%); }
+
+        .img-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--accent-color);
+            padding: 3px 10px;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: #000;
+            z-index: 10;
+        }
+
+        .placeholder-desc {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: #222;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .application-box {
+            background: rgba(0, 102, 255, 0.05);
+            background-image: radial-gradient(var(--secondary-color) 0.5px, transparent 0.5px);
+            background-size: 10px 10px; 
+            border-left: 3px solid var(--secondary-color);
+            padding: 25px 35px;
+            transition: var(--transition);
+        }
+
+        .application-box:hover {
+            box-shadow: inset 0 0 50px rgba(0, 102, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .ladder-container { display: flex; flex-direction: column; gap: 15px; margin: 50px 0; }
+        .ladder-row {
+            background: var(--surface-color);
+            padding: 25px 40px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .ladder-row:hover {
+            border-color: var(--secondary-color);
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.1);
+        }
+
+        .ladder-row:nth-child(1) { width: 100%; border-left: 5px solid var(--accent-color); }
+        .ladder-row:nth-child(2) { width: 90%; }
+        .ladder-row:nth-child(3) { width: 80%; }
+        .ladder-row:nth-child(4) { width: 70%; }
+
+        .row-id { font-family: var(--font-mono); color: var(--accent-color); font-size: 1.2rem; font-weight: 800; }
+        .row-content h3 { font-size: 1.2rem; margin-bottom: 2px; }
+
+        .equity-visual {
+            margin: 40px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .equity-bar-group { width: 100%; }
+        .bar-label { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px; display: block; }
+        .bar-track { height: 45px; background: var(--surface-color); border: 1px solid var(--border-color); position: relative; overflow: hidden; }
+        .bar-fill {
+            height: 100%;
+            background: var(--secondary-color);
+            transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .quote-block {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--text-primary);
+            border-left: 1px solid var(--accent-color);
+            padding-left: 30px;
+            margin: 60px 0;
+            line-height: 1.4;
+        }
+
+        .stat-card { font-weight: 900; color: var(--secondary-color); font-family: var(--font-mono); font-size: 2.5rem; display: block; }
+
+        .back-to-top {
+            display: inline-block;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 10px 0;
+            border-bottom: 1px solid transparent;
+        }
+
+        .back-to-top:hover { color: var(--accent-color); border-bottom-color: var(--accent-color); }
+
+        footer { padding: 60px 0; text-align: center; color: #222; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 2px; }
+
+        /* --- MOBILE ADJUSTMENTS --- */
+        @media (max-width: 900px) {
+            :root { --header-h: 90px; }
+            .header-top { 
+                padding: 10px 20px; 
+                flex-direction: column; 
+                justify-content: center; 
+                gap: 2px;
+                border-bottom: none;
+            }
+            .nav-menu {
+                position: sticky;
+                top: var(--header-h);
+                right: 0; left: 0; bottom: auto;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                background: #050505;
+                padding: 10px 0 15px 0;
+                border-bottom: 1px solid var(--border-color);
+                gap: 15px;
+                margin-top: 0;
+            }
+            .nav-item { border: none; opacity: 0.5; padding: 5px; font-size: 0.75rem; }
+            .nav-item.active { color: var(--accent-color); opacity: 1; }
+            .container { padding: 0 20px; }
+            h1 { font-size: 2.1rem; line-height: 1.1; margin-top: 30px; }
+            section { padding: 80px 0 60px 0; }
+            .ladder-row { width: 100% !important; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading">
+        <div class="loader-text">Configurando Estratégia ATM...</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
+    <div id="glow"></div>
+
+    <header class="header-top">
+        <div class="brand-name">ATM ACADEMY</div>
+        <div class="author">Produzido por: Wesley Rick</div>
+    </header>
+
+    <nav class="nav-menu">
+        <a href="#f1" class="nav-item">01</a>
+        <a href="#f2" class="nav-item">02</a>
+        <a href="#f3" class="nav-item">03</a>
+        <a href="#f4" class="nav-item">04</a>
+        <a href="#f5" class="nav-item">05</a>
+        <a href="#f6" class="nav-item">06</a>
+    </nav>
+
+    <div class="container">
+        
+        <!-- FRAMEWORK 1 -->
+        <section id="f1">
+            <span class="fw-label">Framework 01</span>
+            <h1>EQUITY &<br>AUTORIDADE</h1>
+            
+            <h2>O Case G4 (Redução de CAC)</h2>
+            <p>O G4 não vende "aulas". Eles vendem um Framework de Execução. A autoridade da marca é tão forte que os empresários buscam o G4 de forma ativa e fiel.</p>
+            
+            <div class="application-box">
+                <p>Uma vez que o aluno entra na Imersão (produto de entrada), o custo para vendê-lo para o G4 Club ou G4 Skills é quase zero. O ecossistema se retroalimenta. Na ATM, faremos o mesmo: o Workshop é a porta de entrada para que o cliente compre suas camisas e suas mentorias de forma recorrente.</p>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h2>O Case G4 (Valor e Sustentabilidade)</h2>
+                <p>Você nunca verá o G4 brigando por preço ou dando descontos agressivos de "Black Friday" em seus produtos principais. Eles mantêm o valor através da seletividade e do resultado prático.</p>
+
+                <div class="application-box">
+                    <p>Ao posicionar a ATM como a "Engenharia de Performance" do setor, paramos de atrair o curioso que busca o "cursinho mais barato" e passamos a atrair o Visionário que entende que o lucro está no método. Isso protege sua margem e torna seu conhecimento um ativo que valoriza com o tempo.</p>
+                </div>
+            </div>
+
+            <div class="image-wrapper">
+                <div class="img-tag">IMG_01</div>
+                <img src="img1.jpg" class="parallax-img" alt="Framework Equity G4">
+                <div class="placeholder-desc">[img1.jpg - MODELO EQUITY G4]</div>
+            </div>
+
+            <div class="quote-block">
+                "Marca é uma decisão financeira de sobrevivência e escala. A ATM vai dominar através da autoridade e do ecossistema de produtos."
+            </div>
+        </section>
+
+        <!-- FRAMEWORK 2 -->
+        <section id="f2">
+            <span class="fw-label">Framework 02</span>
+            <h1>ESTRUTURA<br>DE PILARES</h1>
+            <p>Fundamentação técnica dos 6 pilares que compõem o DNA da Engenharia ATM.</p>
+            
+            <div class="image-wrapper" style="border: none; background: transparent;">
+                <div class="img-tag">IMG_02</div>
+                <img src="img2.jpg" class="parallax-img" alt="6 Pilares ATM">
+                <div class="placeholder-desc">[img2.jpg - OS 6 PILARES ATM]</div>
+            </div>
+        </section>
+
+        <!-- FRAMEWORK 3 -->
+        <section id="f3">
+            <span class="fw-label">Framework 03</span>
+            <h1>RADAR DE<br>INTELIGÊNCIA</h1>
+            
+            <h2>Célula de Inteligência Operacional</h2>
+            <p>O Workshop de 24h não é apenas uma aula; é onde coletamos os dados de mercado e as dores dos alunos para alimentar nossos produtos de elite.</p>
+            
+            <h2>Pragmatismo Estratégico</h2>
+            <p>É o ponto de validação. É onde identificamos quem são os 10% de alunos com potencial para as mentorias Premium.</p>
+
+            <div class="image-wrapper">
+                <div class="img-tag">IMG_03</div>
+                <img src="img3.jpg" class="parallax-img" alt="Radar Operacional">
+                <div class="placeholder-desc">[img3.jpg - RADAR OPERACIONAL]</div>
+            </div>
+
+            <div class="quote-block">
+                "O workshop é o nosso maior radar de oportunidades. É onde o dinheiro entra e o produto é refinado."
+            </div>
+        </section>
+
+        <!-- FRAMEWORK 4 -->
+        <section id="f4">
+            <span class="fw-label">Framework 04</span>
+            <h1>ESCADA<br>DE VALOR</h1>
+            
+            <div class="ladder-container">
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Workshop 24h</h3>
+                        <p>A base técnica e o primeiro lucro operacional.</p>
+                    </div>
+                    <span class="row-id">01</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Performance de Gestão</h3>
+                        <p>Sistematização da casa e escala da produção.</p>
+                    </div>
+                    <span class="row-id">02</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Arquitetura de Marca</h3>
+                        <p>O caminho para o aluno criar sua própria marca.</p>
+                    </div>
+                    <span class="row-id">03</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3 style="color: var(--secondary-color);">Design e IA Avançada</h3>
+                        <p>O ápice da tecnologia e automação de processos.</p>
+                    </div>
+                    <span class="row-id" style="color: var(--secondary-color);">04</span>
+                </div>
+            </div>
+
+            <div class="image-wrapper">
+                <div class="img-tag">IMG_04</div>
+                <img src="img4.jpg" class="parallax-img" alt="Infográfico Escada">
+                <div class="placeholder-desc">[img4.jpg - INFOGRÁFICO ESCADA]</div>
+            </div>
+        </section>
+
+        <!-- FRAMEWORK 5 -->
+        <section id="f5">
+            <span class="fw-label">Framework 05</span>
+            <h1>CICLO PRODUTIVO<br>PERFEITO</h1>
+            
+            <div class="ladder-container">
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Processo Produtivo Completo</h3>
+                        <p>O aluno aprende do design à entrega final.</p>
+                    </div>
+                    <span class="row-id">PASSO 01</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Domínio da Técnica</h3>
+                        <p>Garantia do padrão de qualidade ATM.</p>
+                    </div>
+                    <span class="row-id">PASSO 02</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content">
+                        <h3>Escala e Matéria-Prima</h3>
+                        <p>O aluno atinge a necessidade de fornecimento.</p>
+                    </div>
+                    <span class="row-id">PASSO 03</span>
+                </div>
+                <div class="ladder-row">
+                    <div class="row-content" style="color: var(--secondary-color);">
+                        <h3>Motor de Lucro</h3>
+                        <p>A ATM fornece as camisas e fecha o ecossistema.</p>
+                    </div>
+                    <span class="row-id" style="color: var(--secondary-color);">PASSO 04</span>
+                </div>
+            </div>
+
+            <div class="image-wrapper">
+                <div class="img-tag">IMG_05</div>
+                <img src="img5.jpg" class="parallax-img" alt="Fluxograma Domínio">
+                <div class="placeholder-desc">[img5.jpg - FLUXOGRAMA DOMÍNIO]</div>
+            </div>
+
+            <div class="quote-block" style="border-left-color: var(--secondary-color);">
+                "Nós criamos o mercado consumidor para o nosso próprio produto. Ensinamos o aluno a vender para vender para ele."
+            </div>
+        </section>
+
+        <!-- FRAMEWORK 6 -->
+        <section id="f6" style="border-bottom: none;">
+            <span class="fw-label">Framework 06</span>
+            <h1>JORNADA PARA<br>O EQUITY</h1>
+            
+            <div class="equity-visual">
+                <div class="equity-bar-group">
+                    <span class="bar-label">Modelo baseado apenas em esforço físico</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 20%;">20% EQUITY</div>
+                    </div>
+                </div>
+                <div class="equity-bar-group">
+                    <span class="bar-label">Modelo baseado em Método e Recorrência</span>
+                    <div class="bar-track">
+                        <div class="bar-fill" style="width: 100%;">100% EQUITY DOMINATION</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="image-wrapper">
+                <div class="img-tag">IMG_06</div>
+                <img src="img6.jpg" class="parallax-img" alt="Equity Comparison">
+                <div class="placeholder-desc">[img6.jpg - BARRA A VS B]</div>
+            </div>
+
+            <div class="quote-block">
+                O múltiplo de mercado é de até 
+                <span class="stat-card">5X MAIOR</span>
+                Alcançado em apenas
+                <span class="stat-card" style="color: var(--accent-color);">24 MESES</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div>
+                    <h3 style="color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-mono);">Múltiplo de IP</h3>
+                    <p style="font-size: 1rem;">Método de Ensino e Plataforma de Suprimentos geram valuation de empresa de tecnologia.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-mono);">Recorrência (LTV)</h3>
+                    <p style="font-size: 1rem;">O valor explode quando o aluno do Workshop consome insumos mensalmente.</p>
+                </div>
+                <div>
+                    <h3 style="color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-mono);">Independência</h3>
+                    <p style="font-size: 1rem;">Processos e instrutores transformam o negócio em um ativo líquido e atraente para investidores.</p>
+                </div>
+            </div>
+
+            <div class="image-wrapper" style="margin-top: 80px;">
+                <div class="img-tag">IMG_07</div>
+                <img src="img7.jpg" class="parallax-img" alt="Final Journey">
+                <div class="placeholder-desc">[img7.jpg - ENCERRAMENTO]</div>
+            </div>
+
+            <a href="#f1" class="back-to-top">↑ Voltar ao Início do Framework</a>
+        </section>
+
+    </div>
+
+    <footer>
+        ATM ACADEMY SYSTEM © 2024 • FRAMEWORK STRATEGY DEPLOYMENT
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loading');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 800);
+            }, 1200);
+        });
+
+        const glow = document.getElementById('glow');
+        window.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    const id = entry.target.getAttribute('id');
+                    navItems.forEach(item => {
+                        item.classList.toggle('active', item.getAttribute('href') === `#${id}`);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(s => observer.observe(s));
+
+        // Fallback para imagens não encontradas (mantém a descrição visível)
+        document.querySelectorAll('img').forEach(img => {
+            img.onerror = function() {
+                this.style.display = 'none';
+            };
+        });
+    </script>
+</body>
+</html># ATM-Academy
+EQUITY &amp; AUTORIDADE
