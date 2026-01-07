@@ -14,6 +14,7 @@
             --surface-color: #111111;
             --accent-color: #ff4d00; 
             --secondary-color: #0066ff; 
+            --gold-gradient: linear-gradient(45deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             --text-primary: #f5f5f5;
             --text-secondary: #a0a0a0;
             --border-color: #1a1a1a;
@@ -120,19 +121,18 @@
             top: 0;
             background: #050505;
             z-index: 1001;
-            overflow: hidden;
         }
 
         .brand-name { 
             font-weight: 900; 
             letter-spacing: -1px; 
-            font-size: clamp(0.9rem, 4vw, 1.2rem); 
+            font-size: clamp(0.7rem, 3.5vw, 1.2rem); 
             text-transform: uppercase;
             white-space: nowrap;
         }
         
         .author { 
-            font-size: clamp(0.5rem, 2.5vw, 0.6rem); 
+            font-size: clamp(0.5rem, 2.2vw, 0.6rem); 
             text-transform: uppercase; 
             letter-spacing: 2px; 
             color: var(--text-secondary);
@@ -174,7 +174,6 @@
             margin-bottom: 40px;
             letter-spacing: -2px;
             text-transform: uppercase;
-            word-break: break-word;
         }
 
         h2 {
@@ -190,6 +189,9 @@
         h2::before { content: ""; width: 30px; height: 1px; background: var(--secondary-color); }
 
         p { color: var(--text-secondary); font-size: 1.15rem; margin-bottom: 20px; max-width: 850px; }
+
+        .highlight-blue { color: var(--secondary-color); font-weight: 600; }
+        .highlight-orange { color: var(--accent-color); font-weight: 600; }
 
         /* --- COMPONENTS --- */
         .image-wrapper {
@@ -229,20 +231,6 @@
             z-index: 10;
         }
 
-        .placeholder-desc {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: #222;
-            z-index: 1;
-            text-align: center;
-            padding: 20px;
-        }
-
         .application-box {
             background: rgba(0, 102, 255, 0.05);
             background-image: radial-gradient(var(--secondary-color) 0.5px, transparent 0.5px);
@@ -250,11 +238,6 @@
             border-left: 3px solid var(--secondary-color);
             padding: 25px 35px;
             transition: var(--transition);
-        }
-
-        .application-box:hover {
-            box-shadow: inset 0 0 50px rgba(0, 102, 255, 0.1);
-            transform: translateY(-5px);
         }
 
         .ladder-container { display: flex; flex-direction: column; gap: 15px; margin: 50px 0; }
@@ -266,23 +249,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
         }
 
-        .ladder-row:hover {
-            border-color: var(--secondary-color);
-            transform: translateX(10px);
-            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.1);
-        }
-
+        /* Inversão: maior para o menor */
         .ladder-row:nth-child(1) { width: 100%; border-left: 5px solid var(--accent-color); }
         .ladder-row:nth-child(2) { width: 90%; }
         .ladder-row:nth-child(3) { width: 80%; }
         .ladder-row:nth-child(4) { width: 70%; }
 
+        /* Estilo Gold Metálico para Framework 4 Step 4 */
+        .gold-step {
+            background: linear-gradient(90deg, #111, #1a1a1a);
+            border: 1px solid #bf953f !important;
+            box-shadow: 0 0 15px rgba(191, 149, 63, 0.2);
+        }
+        .gold-text {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
         .row-id { font-family: var(--font-mono); color: var(--accent-color); font-size: 1.2rem; font-weight: 800; }
         .row-content h3 { font-size: 1.2rem; margin-bottom: 2px; }
 
+        /* Equity Bars */
         .equity-visual {
             margin: 40px 0;
             display: flex;
@@ -344,7 +335,6 @@
                 flex-direction: column; 
                 justify-content: center; 
                 gap: 2px;
-                border-bottom: none;
             }
             .nav-menu {
                 position: sticky;
@@ -360,9 +350,8 @@
                 margin-top: 0;
             }
             .nav-item { border: none; opacity: 0.5; padding: 5px; font-size: 0.75rem; }
-            .nav-item.active { color: var(--accent-color); opacity: 1; }
             .container { padding: 0 20px; }
-            h1 { font-size: 2.1rem; line-height: 1.1; margin-top: 30px; }
+            h1 { font-size: 1.9rem; line-height: 1.1; margin-top: 30px; }
             section { padding: 80px 0 60px 0; }
             .ladder-row { width: 100% !important; padding: 20px; }
         }
@@ -398,30 +387,29 @@
             <span class="fw-label">Framework 01</span>
             <h1>EQUITY &<br>AUTORIDADE</h1>
             
-            <h2>O Case G4 (Redução de CAC)</h2>
-            <p>O G4 não vende "aulas". Eles vendem um Framework de Execução. A autoridade da marca é tão forte que os empresários buscam o G4 de forma ativa e fiel.</p>
+            <h2>Case G4 Redução de CAC</h2>
+            <p>O G4 não vende aulas. Eles vendem um <span class="highlight-blue">Framework de Execução</span>. A autoridade da marca é tão forte que os empresários buscam o G4 de forma ativa e fiel.</p>
             
             <div class="application-box">
-                <p>Uma vez que o aluno entra na Imersão (produto de entrada), o custo para vendê-lo para o G4 Club ou G4 Skills é quase zero. O ecossistema se retroalimenta. Na ATM, faremos o mesmo: o Workshop é a porta de entrada para que o cliente compre suas camisas e suas mentorias de forma recorrente.</p>
+                <p>Uma vez que o aluno entra na Imersão produto de entrada, o custo para vendê-lo para o G4 Club ou G4 Skills é quase zero. O ecossistema se retroalimenta. Na ATM, faremos o mesmo: o Workshop é a porta de entrada para que o cliente compre suas camisas e suas mentorias de forma recorrente.</p>
             </div>
 
             <div style="margin-top: 40px;">
-                <h2>O Case G4 (Valor e Sustentabilidade)</h2>
-                <p>Você nunca verá o G4 brigando por preço ou dando descontos agressivos de "Black Friday" em seus produtos principais. Eles mantêm o valor através da seletividade e do resultado prático.</p>
+                <h2>Case G4 Valor e Sustentabilidade</h2>
+                <p>Você nunca verá o G4 brigando por preço ou dando descontos agressivos de Black Friday em seus produtos principais. Eles mantêm o valor através da seletividade e do resultado prático.</p>
 
                 <div class="application-box">
-                    <p>Ao posicionar a ATM como a "Engenharia de Performance" do setor, paramos de atrair o curioso que busca o "cursinho mais barato" e passamos a atrair o Visionário que entende que o lucro está no método. Isso protege sua margem e torna seu conhecimento um ativo que valoriza com o tempo.</p>
+                    <p>Ao posicionar a ATM como a <span class="highlight-orange">Engenharia de Performance</span> do setor, paramos de atrair o curioso que busca o cursinho mais barato e passamos a atrair o Visionário que entende que o lucro está no método. Isso protege sua margem e torna seu conhecimento um ativo que valoriza com o tempo.</p>
                 </div>
             </div>
 
             <div class="image-wrapper">
                 <div class="img-tag">IMG_01</div>
-                <img src="img1.jpg" class="parallax-img" alt="Framework Equity G4">
-                <div class="placeholder-desc">[img1.jpg - MODELO EQUITY G4]</div>
+                <img src="img1.jpg" class="parallax-img" alt="Modelo Equity G4">
             </div>
 
             <div class="quote-block">
-                "Marca é uma decisão financeira de sobrevivência e escala. A ATM vai dominar através da autoridade e do ecossistema de produtos."
+                Marca é uma decisão financeira de sobrevivência e escala. A ATM vai dominar através da autoridade e do ecossistema de produtos.
             </div>
         </section>
 
@@ -434,7 +422,6 @@
             <div class="image-wrapper" style="border: none; background: transparent;">
                 <div class="img-tag">IMG_02</div>
                 <img src="img2.jpg" class="parallax-img" alt="6 Pilares ATM">
-                <div class="placeholder-desc">[img2.jpg - OS 6 PILARES ATM]</div>
             </div>
         </section>
 
@@ -447,16 +434,15 @@
             <p>O Workshop de 24h não é apenas uma aula; é onde coletamos os dados de mercado e as dores dos alunos para alimentar nossos produtos de elite.</p>
             
             <h2>Pragmatismo Estratégico</h2>
-            <p>É o ponto de validação. É onde identificamos quem são os 10% de alunos com potencial para as mentorias Premium.</p>
+            <p>É o ponto de validação. É onde identificamos quem são os <span class="highlight-blue">10% de alunos</span> com potencial para as mentorias Premium.</p>
 
             <div class="image-wrapper">
                 <div class="img-tag">IMG_03</div>
                 <img src="img3.jpg" class="parallax-img" alt="Radar Operacional">
-                <div class="placeholder-desc">[img3.jpg - RADAR OPERACIONAL]</div>
             </div>
 
             <div class="quote-block">
-                "O workshop é o nosso maior radar de oportunidades. É onde o dinheiro entra e o produto é refinado."
+                O workshop é o nosso maior radar de oportunidades. É onde o dinheiro entra e o produto é refinado.
             </div>
         </section>
 
@@ -487,19 +473,18 @@
                     </div>
                     <span class="row-id">03</span>
                 </div>
-                <div class="ladder-row">
+                <div class="ladder-row gold-step">
                     <div class="row-content">
-                        <h3 style="color: var(--secondary-color);">Design e IA Avançada</h3>
+                        <h3 class="gold-text">Design e IA Avançada</h3>
                         <p>O ápice da tecnologia e automação de processos.</p>
                     </div>
-                    <span class="row-id" style="color: var(--secondary-color);">04</span>
+                    <span class="row-id" style="color: #bf953f;">04</span>
                 </div>
             </div>
 
             <div class="image-wrapper">
                 <div class="img-tag">IMG_04</div>
                 <img src="img4.jpg" class="parallax-img" alt="Infográfico Escada">
-                <div class="placeholder-desc">[img4.jpg - INFOGRÁFICO ESCADA]</div>
             </div>
         </section>
 
@@ -542,11 +527,10 @@
             <div class="image-wrapper">
                 <div class="img-tag">IMG_05</div>
                 <img src="img5.jpg" class="parallax-img" alt="Fluxograma Domínio">
-                <div class="placeholder-desc">[img5.jpg - FLUXOGRAMA DOMÍNIO]</div>
             </div>
 
             <div class="quote-block" style="border-left-color: var(--secondary-color);">
-                "Nós criamos o mercado consumidor para o nosso próprio produto. Ensinamos o aluno a vender para vender para ele."
+                Nós criamos o mercado consumidor para o nosso próprio produto. Ensinamos o aluno a vender para vender para ele.
             </div>
         </section>
 
@@ -557,13 +541,13 @@
             
             <div class="equity-visual">
                 <div class="equity-bar-group">
-                    <span class="bar-label">Modelo baseado apenas em esforço físico</span>
+                    <span class="bar-label">baseado apenas em esforço físico</span>
                     <div class="bar-track">
                         <div class="bar-fill" style="width: 20%;">20% EQUITY</div>
                     </div>
                 </div>
                 <div class="equity-bar-group">
-                    <span class="bar-label">Modelo baseado em Método e Recorrência</span>
+                    <span class="bar-label">baseado em Método e Recorrência</span>
                     <div class="bar-track">
                         <div class="bar-fill" style="width: 100%;">100% EQUITY DOMINATION</div>
                     </div>
@@ -573,7 +557,6 @@
             <div class="image-wrapper">
                 <div class="img-tag">IMG_06</div>
                 <img src="img6.jpg" class="parallax-img" alt="Equity Comparison">
-                <div class="placeholder-desc">[img6.jpg - BARRA A VS B]</div>
             </div>
 
             <div class="quote-block">
@@ -589,7 +572,7 @@
                     <p style="font-size: 1rem;">Método de Ensino e Plataforma de Suprimentos geram valuation de empresa de tecnologia.</p>
                 </div>
                 <div>
-                    <h3 style="color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-mono);">Recorrência (LTV)</h3>
+                    <h3 style="color: var(--accent-color); font-size: 0.75rem; text-transform: uppercase; margin-bottom: 10px; font-family: var(--font-mono);">Receita Recorrente LTV</h3>
                     <p style="font-size: 1rem;">O valor explode quando o aluno do Workshop consome insumos mensalmente.</p>
                 </div>
                 <div>
@@ -601,7 +584,6 @@
             <div class="image-wrapper" style="margin-top: 80px;">
                 <div class="img-tag">IMG_07</div>
                 <img src="img7.jpg" class="parallax-img" alt="Final Journey">
-                <div class="placeholder-desc">[img7.jpg - ENCERRAMENTO]</div>
             </div>
 
             <a href="#f1" class="back-to-top">↑ Voltar ao Início do Framework</a>
@@ -645,13 +627,6 @@
         }, observerOptions);
 
         sections.forEach(s => observer.observe(s));
-
-        // Fallback para imagens não encontradas (mantém a descrição visível)
-        document.querySelectorAll('img').forEach(img => {
-            img.onerror = function() {
-                this.style.display = 'none';
-            };
-        });
     </script>
 </body>
 </html>
