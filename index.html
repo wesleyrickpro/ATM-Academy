@@ -193,23 +193,22 @@
         .highlight-blue { color: var(--secondary-color); font-weight: 600; }
         .highlight-orange { color: var(--accent-color); font-weight: 600; }
 
-        /* --- IMAGE WRAPPER (ADJUSTED) --- */
+        /* --- IMAGE WRAPPER --- */
         .image-wrapper {
             width: 100%;
-            max-width: 800px; 
-            aspect-ratio: 16 / 9; 
+            aspect-ratio: 2816 / 1536;
             background: #080808;
             border: 1px solid var(--border-color);
-            margin: 40px auto; 
+            margin: 40px 0;
             position: relative;
             overflow: hidden;
-            border-radius: 4px;
+            border-radius: 2px;
         }
 
         .parallax-img {
             width: 100%;
             height: 110%;
-            object-fit: contain; /* Ajustado para SVG */
+            object-fit: cover;
             position: absolute;
             top: 0;
             left: 0;
@@ -219,29 +218,7 @@
 
         .image-wrapper:hover .parallax-img { transform: scale(1.05); filter: grayscale(0%); }
 
-        .img-tag {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: var(--accent-color);
-            padding: 3px 10px;
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: #000;
-            z-index: 10;
-        }
-
-        .application-box {
-            background: rgba(0, 102, 255, 0.05);
-            background-image: radial-gradient(var(--secondary-color) 0.5px, transparent 0.5px);
-            background-size: 10px 10px; 
-            border-left: 3px solid var(--secondary-color);
-            padding: 25px 35px;
-            transition: var(--transition);
-        }
-
-        /* --- PILLARS GRID --- */
+        /* --- FRAMEWORK 02 PILLARS GRID --- */
         .pillars-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -254,6 +231,8 @@
             border: 1px solid var(--border-color);
             padding: 30px;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
 
         .pillar-card:hover {
@@ -271,9 +250,13 @@
             letter-spacing: 2px;
         }
 
-        .pillar-card p { font-size: 0.95rem; margin-bottom: 0; color: var(--text-secondary); }
+        .pillar-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
 
-        /* --- LADDER & STEPS --- */
+        /* --- ESCADA DE VALOR --- */
         .ladder-container { display: flex; flex-direction: column; gap: 15px; margin: 50px 0; }
         .ladder-row {
             background: var(--surface-color);
@@ -377,7 +360,6 @@
             .pillars-grid { grid-template-columns: 1fr; }
             section { padding: 80px 0 60px 0; }
             .ladder-row { width: 100% !important; padding: 20px; }
-            .image-wrapper { max-width: 100%; margin: 30px 0; }
         }
     </style>
 </head>
@@ -427,10 +409,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 1 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_01</div>
-                <img src="img1.svg" class="parallax-img" alt="Framework Equity G4">
+                <img src="img/img1.svg" class="parallax-img" alt="Framework Equity G4">
             </div>
 
             <div class="quote-block">
@@ -471,10 +451,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 2 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_02</div>
-                <img src="img2.svg" class="parallax-img" alt="6 Pilares ATM">
+                <img src="img2.jpg" class="parallax-img" alt="6 Pilares ATM">
             </div>
         </section>
 
@@ -487,12 +465,10 @@
             <p>O Workshop de 24h não é apenas uma aula; é onde coletamos os dados de mercado e as dores dos alunos para alimentar nossos produtos de elite.</p>
             
             <h2>Pragmatismo Estratégico</h2>
-            <p>É o ponto de validação. É onde identificamos quem são os 10% de alunos com potencial para as mentorias Premium.</p>
+            <p>É o ponto de validação. É onde identificamos quem são os <span class="highlight-blue">10% de alunos</span> com potencial para as mentorias Premium.</p>
 
-            <!-- Imagem 3 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_03</div>
-                <img src="img3.svg" class="parallax-img" alt="Radar Operacional">
+                <img src="img3.jpg" class="parallax-img" alt="Radar Operacional">
             </div>
 
             <div class="quote-block">
@@ -536,10 +512,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 4 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_04</div>
-                <img src="img4.svg" class="parallax-img" alt="Infográfico Escada">
+                <img src="img4.jpg" class="parallax-img" alt="Infográfico Escada">
             </div>
         </section>
 
@@ -579,10 +553,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 5 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_05</div>
-                <img src="img5.svg" class="parallax-img" alt="Fluxograma Domínio">
+                <img src="img5.jpg" class="parallax-img" alt="Fluxograma Domínio">
             </div>
 
             <div class="quote-block" style="border-left-color: var(--secondary-color);">
@@ -610,10 +582,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 6 (SVG) -->
             <div class="image-wrapper">
-                <div class="img-tag">IMG_06</div>
-                <img src="img6.svg" class="parallax-img" alt="Equity Comparison">
+                <img src="img6.jpg" class="parallax-img" alt="Equity Comparison">
             </div>
 
             <div class="quote-block">
@@ -638,10 +608,8 @@
                 </div>
             </div>
 
-            <!-- Imagem 7 (SVG) -->
             <div class="image-wrapper" style="margin-top: 80px;">
-                <div class="img-tag">IMG_07</div>
-                <img src="img7.svg" class="parallax-img" alt="Final Journey">
+                <img src="img7.jpg" class="parallax-img" alt="Final Journey">
             </div>
 
             <a href="#f1" class="back-to-top">↑ Voltar ao Início do Framework</a>
